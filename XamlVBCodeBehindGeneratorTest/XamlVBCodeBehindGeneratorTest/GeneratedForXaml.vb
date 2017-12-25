@@ -1,7 +1,7 @@
 ﻿Imports Xamarin.Forms
 Imports Xamarin.Forms.Xaml
 
-Namespace Global.XamlVBCodeBehindGeneratorTestVB
+Namespace Global.XamlVBCodeBehindGeneratorTest
 Partial Public Class App
     Inherits Application
 
@@ -12,7 +12,7 @@ End Class
 
 End Namespace
 
-Namespace Global.XamlVBCodeBehindGeneratorTestVB.Views
+Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 Partial Public Class AboutPage
     Inherits ContentPage
 
@@ -31,7 +31,7 @@ Partial Public Class AboutPage
     End Sub
 End Class
 End Namespace
-Namespace Global.XamlVBCodeBehindGeneratorTestVB.Views
+Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 Partial Public Class ItemDetailPage
     Inherits ContentPage
 
@@ -50,7 +50,7 @@ Partial Public Class ItemDetailPage
     End Sub
 End Class
 End Namespace
-Namespace Global.XamlVBCodeBehindGeneratorTestVB.Views
+Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 Partial Public Class ItemsPage
     Inherits ContentPage
 WithEvents ItemsListView As ListView
@@ -69,7 +69,7 @@ ItemsListView = Content.FindByName(Of ListView)(NameOf(ItemsListView))
     End Sub
 End Class
 End Namespace
-Namespace Global.XamlVBCodeBehindGeneratorTestVB.Views
+Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 Partial Public Class MainPage
     Inherits TabbedPage
 
@@ -88,7 +88,7 @@ Partial Public Class MainPage
     End Sub
 End Class
 End Namespace
-Namespace Global.XamlVBCodeBehindGeneratorTestVB.Views
+Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 Partial Public Class NewItemPage
     Inherits ContentPage
 

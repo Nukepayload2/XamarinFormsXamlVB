@@ -150,11 +150,11 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.121934" />
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1"/>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest.csproj">
-      <Project>{29702327-5C4F-46EF-A92F-5169474D09B4}</Project>
+    <ProjectReference Include="..\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest.vbproj">
+      <Project>{687e38ef-bb84-436f-b290-8470bb8abeae}</Project>
       <Name>XamlVBCodeBehindGeneratorTest</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,4 +1,4 @@
-﻿Imports XamlVBCodeBehindGeneratorTestVB.Models
+﻿Imports XamlVBCodeBehindGeneratorTest.Models
 
 <Assembly: Xamarin.Forms.Dependency(GetType(Services.MockDataStore))>
 Namespace Services

@@ -1,8 +1,8 @@
 ﻿Imports System.ComponentModel
 Imports System.Runtime.CompilerServices
 Imports Xamarin.Forms
-Imports XamlVBCodeBehindGeneratorTestVB.Models
-Imports XamlVBCodeBehindGeneratorTestVB.Services
+Imports XamlVBCodeBehindGeneratorTest.Models
+Imports XamlVBCodeBehindGeneratorTest.Services
 
 Namespace ViewModels
 

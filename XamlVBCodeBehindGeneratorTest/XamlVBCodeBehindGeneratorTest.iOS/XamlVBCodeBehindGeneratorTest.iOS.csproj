@@ -149,8 +149,8 @@
     <BundleResource Include="Resources\xamarin_logo%403x.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest.csproj">
-      <Project>{29702327-5C4F-46EF-A92F-5169474D09B4}</Project>
+    <ProjectReference Include="..\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest.vbproj">
+      <Project>{687e38ef-bb84-436f-b290-8470bb8abeae}</Project>
       <Name>XamlVBCodeBehindGeneratorTest</Name>
     </ProjectReference>
   </ItemGroup>

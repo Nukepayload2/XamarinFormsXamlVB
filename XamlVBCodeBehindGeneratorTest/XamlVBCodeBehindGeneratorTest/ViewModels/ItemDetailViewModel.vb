@@ -1,4 +1,4 @@
-﻿Imports XamlVBCodeBehindGeneratorTestVB.Models
+﻿Imports XamlVBCodeBehindGeneratorTest.Models
 
 Namespace ViewModels
 

@@ -1,7 +1,7 @@
 ﻿Imports Xamarin.Forms
 Imports Xamarin.Forms.Xaml
-Imports XamlVBCodeBehindGeneratorTestVB.Models
-Imports XamlVBCodeBehindGeneratorTestVB.ViewModels
+Imports XamlVBCodeBehindGeneratorTest.Models
+Imports XamlVBCodeBehindGeneratorTest.ViewModels
 
 Namespace Views
 
