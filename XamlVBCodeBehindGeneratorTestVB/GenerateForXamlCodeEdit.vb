@@ -14,8 +14,21 @@ Imports Xamarin.Forms.Xaml
         Dim getXamlXClass As New Regex("(?<=x:Class\="").+?(?="")")
         Dim pageXamlBuilder As New StringBuilder
         Dim appXamlBuilder As New StringBuilder
-        Directory.SetCurrentDirectory(projDir)
-        For Each fn In From f In Directory.GetFiles(projDir)
+        Dim getFiles As Func(Of String, Integer, IEnumerable(Of String)) =
+            Iterator Function(dir, iterCount)
+                Directory.SetCurrentDirectory(dir)
+                If iterCount > 3 Then Return ' Special handling for recursive directory junction, to avoid infinite loop.
+                Dim innerDirs = Directory.GetDirectories(dir)
+                For Each f In Directory.GetFiles(dir)
+                    Yield f
+                Next
+                For Each innerDir In innerDirs
+                    For Each f In getFiles(innerDir, iterCount + 1)
+                        Yield f
+                    Next
+                Next
+            End Function
+        For Each fn In From f In getFiles(projDir, 0)
                        Where f.EndsWith(".xaml", StringComparison.OrdinalIgnoreCase)
                        Select Path.GetFileName(f)
             Dim isAppXaml As Boolean = fn.Equals("App.xaml", StringComparison.OrdinalIgnoreCase)
@@ -49,8 +62,9 @@ End Class
                 Dim parsedXaml = XElement.Parse(xamlText)
                 ' TODO: Do not add named elements that can't be found with Content.FindByName.
                 Dim xmlXName As XName = XName.Get("Name", xmlNameSpaceX)
+                Dim baseClass = parsedXaml.Name.LocalName
                 Dim namedElements = From node In parsedXaml.Descendants
-                                    Let name = node.Attribute(xmlXName)?.Value
+                                    Let name = node.Attribute(xmlXName)?.Value ' We can't use node.@Value until VB has method scope Imports directive.
                                     Where Not String.IsNullOrEmpty(name)
                                     Select ControlName = name, ElementName = node.Name.LocalName
                 Dim withEventsBlock = String.Join(vbCrLf, From e In namedElements
@@ -58,15 +72,20 @@ End Class
                 Dim withEventsInitBlock = String.Join(vbCrLf, From e In namedElements
                                                               Select $"{e.ControlName} = Content.FindByName(Of {e.ElementName})(NameOf({e.ControlName}))")
                 curBuilder.AppendLine($"Partial Public Class {className}
-    Inherits ContentPage
+    Inherits {baseClass}
 {withEventsBlock}
     Sub New()
         InitializeComponent()
-{withEventsInitBlock}
+        OnComponentInitialized()
+    End Sub
+
+    Partial Private Sub OnComponentInitialized()
+
     End Sub
 
     Private Sub InitializeComponent()
         Extensions.LoadFromXaml(Me, GetType({className}))
+{withEventsInitBlock}
     End Sub
 End Class")
             End If
@@ -77,4 +96,5 @@ End Class")
         appXaml = appXamlBuilder.ToString
         pageXaml = pageXamlBuilder.ToString
     End Sub
+
 End Class

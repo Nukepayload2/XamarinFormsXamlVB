@@ -1,4 +1,5 @@
 ﻿Imports Xamarin.Forms
+Imports XamlVBCodeBehindGeneratorTestVB.Views
 
 Public Class App
     Inherits Application
