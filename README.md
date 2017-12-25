@@ -1,7 +1,7 @@
 # XamarinFormsXamlVB
 Provides Xamarin.Forms Xaml support for Visual Basic.
 
-Our agenda is allow you to write cross-platform app with Xamarin.Forms, Visual Basic and Xaml.
+Our target is allow you to write cross-platform app with Xamarin.Forms, Visual Basic and Xaml.
 
 The only truly useful file in this project is [a T4 template which generates a VB source file that equivalent to *.xaml.g.vb files](https://github.com/Nukepayload2/XamarinFormsXamlVB/blob/master/XamlVBCodeBehindGeneratorTest/XamlVBCodeBehindGeneratorTest/GeneratedForXaml.tt).
 
