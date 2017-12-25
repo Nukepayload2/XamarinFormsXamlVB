@@ -1,16 +1,18 @@
-﻿Imports System.IO
+﻿Option Strict On
+
+Imports System.IO
 Imports System.Text
 Imports System.Text.RegularExpressions
 
 Public Class GenerateForXamlCodeEdit
     Sub Run(projDir$)
         Const xmlNameSpaceX As String = "http://schemas.microsoft.com/winfx/2009/xaml"
-        Dim common = "Imports Xamarin.Forms
+        Dim common = "Option Strict On
+Imports Xamarin.Forms
 Imports Xamarin.Forms.Xaml
 "
         Dim appXaml = ""
         Dim pageXaml = ""
-        Dim fn$
         Dim getXamlXClass As New Regex("(?<=x:Class\="").+?(?="")")
         Dim pageXamlBuilder As New StringBuilder
         Dim appXamlBuilder As New StringBuilder
@@ -28,9 +30,9 @@ Imports Xamarin.Forms.Xaml
                     Next
                 Next
             End Function
-        For Each fn In From f In getFiles(projDir, 0)
+        For Each fp In From f In getFiles(projDir, 0)
                        Where f.EndsWith(".xaml", StringComparison.OrdinalIgnoreCase)
-                       Select Path.GetFileName(f)
+            Dim fn = Path.GetFileName(fp)
             Dim isAppXaml As Boolean = fn.Equals("App.xaml", StringComparison.OrdinalIgnoreCase)
             Dim curBuilder = If(isAppXaml, appXamlBuilder, pageXamlBuilder)
             Dim className = Path.GetFileNameWithoutExtension(fn)
@@ -48,6 +50,7 @@ Imports Xamarin.Forms.Xaml
                     Throw New InvalidOperationException("Invalid x:Class value in App.xaml.")
                 End If
             End If
+            curBuilder.AppendLine($"<Global.Xamarin.Forms.Xaml.XamlFilePath(""{fp}"")>")
             If isAppXaml Then
                 curBuilder.AppendLine($"Partial Public Class {className}
     Inherits Application

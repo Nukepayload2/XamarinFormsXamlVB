@@ -1,7 +1,9 @@
-﻿Imports Xamarin.Forms
+﻿Option Strict On
+Imports Xamarin.Forms
 Imports Xamarin.Forms.Xaml
 
 Namespace Global.XamlVBCodeBehindGeneratorTest
+<Global.Xamarin.Forms.Xaml.XamlFilePath("D:\Projects\XamarinFormsXamlVB\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest\App.xaml")>
 Partial Public Class App
     Inherits Application
 
@@ -13,6 +15,7 @@ End Class
 End Namespace
 
 Namespace Global.XamlVBCodeBehindGeneratorTest.Views
+<Global.Xamarin.Forms.Xaml.XamlFilePath("D:\Projects\XamarinFormsXamlVB\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest\Views\AboutPage.xaml")>
 Partial Public Class AboutPage
     Inherits ContentPage
 
@@ -32,6 +35,7 @@ Partial Public Class AboutPage
 End Class
 End Namespace
 Namespace Global.XamlVBCodeBehindGeneratorTest.Views
+<Global.Xamarin.Forms.Xaml.XamlFilePath("D:\Projects\XamarinFormsXamlVB\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest\Views\ItemDetailPage.xaml")>
 Partial Public Class ItemDetailPage
     Inherits ContentPage
 
@@ -51,6 +55,7 @@ Partial Public Class ItemDetailPage
 End Class
 End Namespace
 Namespace Global.XamlVBCodeBehindGeneratorTest.Views
+<Global.Xamarin.Forms.Xaml.XamlFilePath("D:\Projects\XamarinFormsXamlVB\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest\Views\ItemsPage.xaml")>
 Partial Public Class ItemsPage
     Inherits ContentPage
 WithEvents ItemsListView As ListView
@@ -70,6 +75,7 @@ ItemsListView = Content.FindByName(Of ListView)(NameOf(ItemsListView))
 End Class
 End Namespace
 Namespace Global.XamlVBCodeBehindGeneratorTest.Views
+<Global.Xamarin.Forms.Xaml.XamlFilePath("D:\Projects\XamarinFormsXamlVB\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest\Views\MainPage.xaml")>
 Partial Public Class MainPage
     Inherits TabbedPage
 
@@ -89,6 +95,7 @@ Partial Public Class MainPage
 End Class
 End Namespace
 Namespace Global.XamlVBCodeBehindGeneratorTest.Views
+<Global.Xamarin.Forms.Xaml.XamlFilePath("D:\Projects\XamarinFormsXamlVB\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest\Views\NewItemPage.xaml")>
 Partial Public Class NewItemPage
     Inherits ContentPage
 

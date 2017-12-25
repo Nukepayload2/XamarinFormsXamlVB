@@ -9,7 +9,7 @@ Namespace ViewModels
 
         Public Sub New(Optional item As Item = Nothing)
             Title = item?.Text
-            item = item
+            Me.Item = item
         End Sub
     End Class
 End Namespace
