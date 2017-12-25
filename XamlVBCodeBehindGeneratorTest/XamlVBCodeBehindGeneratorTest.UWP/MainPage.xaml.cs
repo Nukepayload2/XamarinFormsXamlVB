@@ -21,7 +21,7 @@ namespace XamlVBCodeBehindGeneratorTest.UWP
         {
             this.InitializeComponent();
 
-            LoadApplication(new XamlVBCodeBehindGeneratorTestVB.App());
+            LoadApplication(new XamlVBCodeBehindGeneratorTest.App());
         }
     }
 }

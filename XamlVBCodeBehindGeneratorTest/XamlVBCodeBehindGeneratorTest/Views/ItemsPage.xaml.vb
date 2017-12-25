@@ -5,7 +5,6 @@ Imports XamlVBCodeBehindGeneratorTest.ViewModels
 
 Namespace Views
 
-    <XamlCompilation(XamlCompilationOptions.Compile)>
     Partial Public Class ItemsPage
         Inherits ContentPage
 
