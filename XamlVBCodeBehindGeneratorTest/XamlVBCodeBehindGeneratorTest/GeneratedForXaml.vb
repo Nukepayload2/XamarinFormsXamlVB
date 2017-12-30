@@ -59,6 +59,7 @@ Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 Partial Public Class ItemsPage
     Inherits ContentPage
 WithEvents BrowseItemsPage As Global.Xamarin.Forms.ContentPage
+WithEvents AddItem As Global.Xamarin.Forms.ToolbarItem
 WithEvents ItemsListView As Global.Xamarin.Forms.ListView
     Sub New()
         InitializeComponent()
@@ -72,6 +73,7 @@ WithEvents ItemsListView As Global.Xamarin.Forms.ListView
     Private Sub InitializeComponent()
         Extensions.LoadFromXaml(Me, GetType(ItemsPage))
 BrowseItemsPage = Content.FindByName(Of Global.Xamarin.Forms.ContentPage)(NameOf(BrowseItemsPage))
+AddItem = Content.FindByName(Of Global.Xamarin.Forms.ToolbarItem)(NameOf(AddItem))
 ItemsListView = Content.FindByName(Of Global.Xamarin.Forms.ListView)(NameOf(ItemsListView))
     End Sub
 End Class
@@ -100,7 +102,7 @@ Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 <Global.Xamarin.Forms.Xaml.XamlFilePath("D:\Projects\XamarinFormsXamlVB\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest\Views\NewItemPage.xaml")>
 Partial Public Class NewItemPage
     Inherits ContentPage
-
+WithEvents Save As Global.Xamarin.Forms.ToolbarItem
     Sub New()
         InitializeComponent()
         OnComponentInitialized()
@@ -112,7 +114,7 @@ Partial Public Class NewItemPage
 
     Private Sub InitializeComponent()
         Extensions.LoadFromXaml(Me, GetType(NewItemPage))
-
+Save = Content.FindByName(Of Global.Xamarin.Forms.ToolbarItem)(NameOf(Save))
     End Sub
 End Class
 End Namespace
