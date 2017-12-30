@@ -30,8 +30,6 @@ That's why I'm working on a T4 template that generates those missing codes.
 ## Known Issues
 - Xaml pre-compile is not supported.
 - The Xamarin.Forms UI assembly can not be simplified (or linked).
-- All elements that have specified x:Name will generate corresponding `WithEvent` members.
-- XML namespace is not fully supported. All controls are not qualified with Namespace.
 
 ## Contribute
 - We need your help to improve English contents or fix bugs.
@@ -66,8 +64,6 @@ That's why I'm working on a T4 template that generates those missing codes.
 ## 已知问题
 - Xaml 预编译不受支持。
 - Xamarin.Forms UI 程序集不能简化或链接。
-- 所有带 x:Name 的元素会产生相应的 `WithEvent` 成员。
-- XML 命名空间尚未完全支持，所有控件都没有加命名空间修饰。
 
 ## 贡献
 - 我们需要帮助来改进英文内容和修复 Bug。
