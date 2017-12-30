@@ -37,6 +37,7 @@ Imports Xamarin.Forms.Xaml
 "
         Dim appXaml = ""
         Dim pageXaml = ""
+        Dim noWithEventsElements = {"ControlTemplate", "DataTemplate", "Style"}
         Dim getXamlXClass As New Regex("(?<=x:Class\="").+?(?="")")
         Dim pageXamlBuilder As New StringBuilder
         Dim appXamlBuilder As New StringBuilder
@@ -87,18 +88,55 @@ End Class
             Else
                 ' WithEvents code generation.
                 Dim parsedXaml = XElement.Parse(xamlText)
-                ' TODO: Do not add named elements that can't be found with Content.FindByName.
                 Dim xmlXName As XName = XName.Get("Name", X2009Uri)
+                Dim xmlXFieldModifier As XName = XName.Get("FieldModifier", X2009Uri)
                 Dim baseClass = parsedXaml.Name.LocalName
-                Dim namedElements = From node In parsedXaml.Descendants
+                Dim getNonTemplatedNodes As Func(Of XElement, IEnumerable(Of XElement)) =
+                    Iterator Function(element)
+                        Dim elementName As XName = element.Name
+                        If noWithEventsElements.Contains(elementName.LocalName) AndAlso elementName.NamespaceName = XFUri Then
+                            Return
+                        End If
+                        Yield element
+                        For Each child In element.Elements
+                            For Each innerChild In getNonTemplatedNodes(child)
+                                Yield innerChild
+                            Next
+                        Next
+                    End Function
+                Dim tryGetAccessModifier =
+                    Function(node As XElement) As String
+                        Dim attr = node.Attribute(xmlXFieldModifier)
+                        If attr Is Nothing Then
+                            Return String.Empty
+                        Else
+                            Dim value = attr.Value
+                            ' TODO: Rewrite with Select Case when Option Compare OrdinalIgnoreCase is implemented.
+                            If value.Equals("public", StringComparison.OrdinalIgnoreCase) Then
+                                Return "Public "
+                            ElseIf value.Equals("protected", StringComparison.OrdinalIgnoreCase) Then
+                                Return "Protected "
+                            ElseIf value.Equals("nonpublic", StringComparison.OrdinalIgnoreCase) OrElse
+                                                       value.Equals("internal", StringComparison.OrdinalIgnoreCase) Then
+                                Return "Friend "
+                            ElseIf value.Equals("private", StringComparison.OrdinalIgnoreCase) Then
+                                Return "Private "
+                            Else
+                                Return String.Empty
+                            End If
+                        End If
+                    End Function
+                Dim namedElements = From node In getNonTemplatedNodes(parsedXaml)
                                     Let nameAttr = node.Attribute(xmlXName)
                                     Where nameAttr IsNot Nothing
                                     Let ctlName = nameAttr.Value ' We can't use node.@Value until VB has method scope Imports directive.
                                     Let ctlNamespace = tryGetClrNamespace(node.Name.Namespace.NamespaceName)
                                     Where Not (String.IsNullOrEmpty(ctlNamespace) OrElse String.IsNullOrEmpty(ctlName))
-                                    Select ControlName = ctlName, TypeName = "Global." + ctlNamespace + "." + node.Name.LocalName
+                                    Select ControlName = ctlName,
+                                           TypeName = "Global." + ctlNamespace + "." + node.Name.LocalName,
+                                           AccessModifier = tryGetAccessModifier(node)
                 Dim withEventsBlock = String.Join(vbCrLf, From e In namedElements
-                                                          Select $"WithEvents {e.ControlName} As {e.TypeName}")
+                                                          Select $"{e.AccessModifier}WithEvents {e.ControlName} As {e.TypeName}")
                 Dim withEventsInitBlock = String.Join(vbCrLf, From e In namedElements
                                                               Select $"{e.ControlName} = Content.FindByName(Of {e.TypeName})(NameOf({e.ControlName}))")
                 curBuilder.AppendLine($"Partial Public Class {className}

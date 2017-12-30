@@ -58,6 +58,7 @@ Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 <Global.Xamarin.Forms.Xaml.XamlFilePath("D:\Projects\XamarinFormsXamlVB\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest\Views\ItemsPage.xaml")>
 Partial Public Class ItemsPage
     Inherits ContentPage
+WithEvents BrowseItemsPage As Global.Xamarin.Forms.ContentPage
 WithEvents ItemsListView As Global.Xamarin.Forms.ListView
     Sub New()
         InitializeComponent()
@@ -70,6 +71,7 @@ WithEvents ItemsListView As Global.Xamarin.Forms.ListView
 
     Private Sub InitializeComponent()
         Extensions.LoadFromXaml(Me, GetType(ItemsPage))
+BrowseItemsPage = Content.FindByName(Of Global.Xamarin.Forms.ContentPage)(NameOf(BrowseItemsPage))
 ItemsListView = Content.FindByName(Of Global.Xamarin.Forms.ListView)(NameOf(ItemsListView))
     End Sub
 End Class
