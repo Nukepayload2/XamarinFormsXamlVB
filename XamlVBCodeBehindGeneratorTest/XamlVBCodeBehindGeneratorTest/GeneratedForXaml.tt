@@ -13,7 +13,24 @@
 <#@ import namespace="Microsoft.VisualBasic" #>
 <#
 	    Dim projDir = Host.ResolveAssemblyReference("$(ProjectDir)")
-        Const xmlNameSpaceX As String = "http://schemas.microsoft.com/winfx/2009/xaml"
+        Const X2009Uri = "http://schemas.microsoft.com/winfx/2009/xaml",
+              XFUri = "http://xamarin.com/schemas/2014/forms"
+        Dim tryGetClrNamespace =
+            Function(xmlns As String) As String
+                If xmlns.StartsWith("using") OrElse xmlns.StartsWith("clr-namespace") Then
+                    Dim endPos = xmlns.LastIndexOf(";"c)
+                    Dim start = xmlns.IndexOf(":"c) + 1
+                    If endPos <= 0 Then
+                        Return xmlns.Substring(start)
+                    Else
+                        Return xmlns.Substring(start, endPos - start)
+                    End If
+                ElseIf xmlns = XFUri Then
+                    Return "Xamarin.Forms"
+                Else
+                    Return String.Empty
+                End If
+            End Function
         Dim common = "Option Strict On
 Imports Xamarin.Forms
 Imports Xamarin.Forms.Xaml
@@ -71,16 +88,19 @@ End Class
                 ' WithEvents code generation.
                 Dim parsedXaml = XElement.Parse(xamlText)
                 ' TODO: Do not add named elements that can't be found with Content.FindByName.
-                Dim xmlXName As XName = XName.Get("Name", xmlNameSpaceX)
+                Dim xmlXName As XName = XName.Get("Name", X2009Uri)
                 Dim baseClass = parsedXaml.Name.LocalName
                 Dim namedElements = From node In parsedXaml.Descendants
-                                    Let name = node.Attribute(xmlXName)?.Value ' We can't use node.@Value until VB has method scope Imports directive.
-                                    Where Not String.IsNullOrEmpty(name)
-                                    Select ControlName = name, ElementName = node.Name.LocalName
+                                    Let nameAttr = node.Attribute(xmlXName)
+                                    Where nameAttr IsNot Nothing
+                                    Let ctlName = nameAttr.Value ' We can't use node.@Value until VB has method scope Imports directive.
+                                    Let ctlNamespace = tryGetClrNamespace(node.Name.Namespace.NamespaceName)
+                                    Where Not (String.IsNullOrEmpty(ctlNamespace) OrElse String.IsNullOrEmpty(ctlName))
+                                    Select ControlName = ctlName, TypeName = "Global." + ctlNamespace + "." + node.Name.LocalName
                 Dim withEventsBlock = String.Join(vbCrLf, From e In namedElements
-                                                          Select $"WithEvents {e.ControlName} As {e.ElementName}")
+                                                          Select $"WithEvents {e.ControlName} As {e.TypeName}")
                 Dim withEventsInitBlock = String.Join(vbCrLf, From e In namedElements
-                                                              Select $"{e.ControlName} = Content.FindByName(Of {e.ElementName})(NameOf({e.ControlName}))")
+                                                              Select $"{e.ControlName} = Content.FindByName(Of {e.TypeName})(NameOf({e.ControlName}))")
                 curBuilder.AppendLine($"Partial Public Class {className}
     Inherits {baseClass}
 {withEventsBlock}
