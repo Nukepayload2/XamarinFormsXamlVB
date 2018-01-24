@@ -1,6 +1,7 @@
 ﻿Imports Xamarin.Forms
 Imports XamlVBCodeBehindGeneratorTest.Views
 
+'Xaml compilation is not supported by XamlC.
 '<Assembly: Xaml.XamlCompilation(Xaml.XamlCompilationOptions.Compile)>
 Public Class App
     Inherits Application
