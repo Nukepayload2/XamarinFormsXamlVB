@@ -8,6 +8,13 @@ Public Class GenerateForXamlCodeEdit
     Sub Run(projDir$)
         Const X2009Uri = "http://schemas.microsoft.com/winfx/2009/xaml",
               XFUri = "http://xamarin.com/schemas/2014/forms"
+        Dim xamlC = True ' Set to False if you want to access controls via WithEvents.
+        Dim controlBackingFieldModifier = ""
+        If xamlC Then
+            controlBackingFieldModifier = "Dim"
+        Else
+            controlBackingFieldModifier = "WithEvents"
+        End If
         Dim tryGetClrNamespace =
             Function(xmlns As String) As String
                 If xmlns.StartsWith("using") OrElse xmlns.StartsWith("clr-namespace") Then
@@ -72,9 +79,9 @@ Imports Xamarin.Forms.Xaml
             If isAppXaml Then
                 curBuilder.AppendLine($"Partial Public Class {className}
     Inherits Application
-
+	<Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Xamarin.Forms.Build.Tasks.XamlG"", ""0.0.0.0"")>
     Private Sub InitializeComponent()
-        Extensions.LoadFromXaml(Me, GetType({className}))
+        Global.Xamarin.Forms.Xaml.Extensions.LoadFromXaml(Me, GetType({className}))
     End Sub
 End Class
 ")
@@ -129,7 +136,7 @@ End Class
                                            TypeName = "Global." + ctlNamespace + "." + node.Name.LocalName,
                                            AccessModifier = tryGetAccessModifier(node)
                 Dim withEventsBlock = String.Join(vbCrLf, From e In namedElements
-                                                          Select $"{e.AccessModifier}WithEvents {e.ControlName} As {e.TypeName}")
+                                                          Select $"{e.AccessModifier}{controlBackingFieldModifier} {e.ControlName} As {e.TypeName}")
                 Dim withEventsInitBlock = String.Join(vbCrLf, From e In namedElements
                                                               Select $"{e.ControlName} = Content.FindByName(Of {e.TypeName})(NameOf({e.ControlName}))")
                 curBuilder.AppendLine($"Partial Public Class {className}
@@ -144,6 +151,7 @@ End Class
 
     End Sub
 
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Xamarin.Forms.Build.Tasks.XamlG"", ""0.0.0.0"")>
     Private Sub InitializeComponent()
         Extensions.LoadFromXaml(Me, GetType({className}))
 {withEventsInitBlock}
