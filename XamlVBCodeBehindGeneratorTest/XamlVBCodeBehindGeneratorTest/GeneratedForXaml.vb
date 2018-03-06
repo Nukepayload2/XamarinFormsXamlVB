@@ -1,4 +1,5 @@
 ﻿Option Strict On
+Imports System.ComponentModel
 Imports Xamarin.Forms
 Imports Xamarin.Forms.Xaml
 
@@ -19,9 +20,15 @@ Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 Partial Public Class AboutPage
     Inherits ContentPage
 
+
     Sub New()
         InitializeComponent()
+        InitializeWithEvents()
         OnComponentInitialized()
+    End Sub
+
+    Private Sub InitializeWithEvents()
+
     End Sub
 
     Partial Private Sub OnComponentInitialized()
@@ -40,9 +47,15 @@ Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 Partial Public Class ItemDetailPage
     Inherits ContentPage
 
+
     Sub New()
         InitializeComponent()
+        InitializeWithEvents()
         OnComponentInitialized()
+    End Sub
+
+    Private Sub InitializeWithEvents()
+
     End Sub
 
     Partial Private Sub OnComponentInitialized()
@@ -60,12 +73,22 @@ Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 <Global.Xamarin.Forms.Xaml.XamlFilePath("G:\vs2017\XamarinFormsXamlVB\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest\Views\ItemsPage.xaml")>
 Partial Public Class ItemsPage
     Inherits ContentPage
-WithEvents BrowseItemsPage As Global.Xamarin.Forms.ContentPage
-WithEvents AddItem As Global.Xamarin.Forms.ToolbarItem
-WithEvents ItemsListView As Global.Xamarin.Forms.ListView
+Private  BrowseItemsPage As Global.Xamarin.Forms.ContentPage
+Private  AddItem As Global.Xamarin.Forms.ToolbarItem
+Private  ItemsListView As Global.Xamarin.Forms.ListView
+Private WithEvents BrowseItemsPageWithEvents As Global.Xamarin.Forms.ContentPage
+Private WithEvents AddItemWithEvents As Global.Xamarin.Forms.ToolbarItem
+Private WithEvents ItemsListViewWithEvents As Global.Xamarin.Forms.ListView
     Sub New()
         InitializeComponent()
+        InitializeWithEvents()
         OnComponentInitialized()
+    End Sub
+
+    Private Sub InitializeWithEvents()
+BrowseItemsPageWithEvents = BrowseItemsPage
+AddItemWithEvents = AddItem
+ItemsListViewWithEvents = ItemsListView
     End Sub
 
     Partial Private Sub OnComponentInitialized()
@@ -86,9 +109,15 @@ Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 Partial Public Class MainPage
     Inherits TabbedPage
 
+
     Sub New()
         InitializeComponent()
+        InitializeWithEvents()
         OnComponentInitialized()
+    End Sub
+
+    Private Sub InitializeWithEvents()
+
     End Sub
 
     Partial Private Sub OnComponentInitialized()
@@ -106,10 +135,16 @@ Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 <Global.Xamarin.Forms.Xaml.XamlFilePath("G:\vs2017\XamarinFormsXamlVB\XamlVBCodeBehindGeneratorTest\XamlVBCodeBehindGeneratorTest\Views\NewItemPage.xaml")>
 Partial Public Class NewItemPage
     Inherits ContentPage
-WithEvents Save As Global.Xamarin.Forms.ToolbarItem
+Private  Save As Global.Xamarin.Forms.ToolbarItem
+Private WithEvents SaveWithEvents As Global.Xamarin.Forms.ToolbarItem
     Sub New()
         InitializeComponent()
+        InitializeWithEvents()
         OnComponentInitialized()
+    End Sub
+
+    Private Sub InitializeWithEvents()
+SaveWithEvents = Save
     End Sub
 
     Partial Private Sub OnComponentInitialized()

@@ -8,13 +8,6 @@ Public Class GenerateForXamlCodeEdit
     Sub Run(projDir$)
         Const X2009Uri = "http://schemas.microsoft.com/winfx/2009/xaml",
               XFUri = "http://xamarin.com/schemas/2014/forms"
-        Dim xamlC = True ' Set to False if you want to access controls via WithEvents.
-        Dim controlBackingFieldModifier = ""
-        If xamlC Then
-            controlBackingFieldModifier = "Dim"
-        Else
-            controlBackingFieldModifier = "WithEvents"
-        End If
         Dim tryGetClrNamespace =
             Function(xmlns As String) As String
                 If xmlns.StartsWith("using") OrElse xmlns.StartsWith("clr-namespace") Then
@@ -32,6 +25,7 @@ Public Class GenerateForXamlCodeEdit
                 End If
             End Function
         Dim common = "Option Strict On
+Imports System.ComponentModel
 Imports Xamarin.Forms
 Imports Xamarin.Forms.Xaml
 "
@@ -108,7 +102,7 @@ End Class
                     Function(node As XElement) As String
                         Dim attr = node.Attribute(xmlXFieldModifier)
                         If attr Is Nothing Then
-                            Return String.Empty
+                            Return "Private "
                         Else
                             Dim value = attr.Value
                             ' TODO: Rewrite with Select Case when Option Compare OrdinalIgnoreCase is implemented.
@@ -122,7 +116,7 @@ End Class
                             ElseIf value.Equals("private", StringComparison.OrdinalIgnoreCase) Then
                                 Return "Private "
                             Else
-                                Return String.Empty
+                                Return "Private "
                             End If
                         End If
                     End Function
@@ -135,16 +129,26 @@ End Class
                                     Select ControlName = ctlName,
                                            TypeName = "Global." + ctlNamespace + "." + node.Name.LocalName,
                                            AccessModifier = tryGetAccessModifier(node)
+                Dim backingFieldsBlock = String.Join(vbCrLf, From e In namedElements
+                                                             Select $"{e.AccessModifier} {e.ControlName} As {e.TypeName}")
                 Dim withEventsBlock = String.Join(vbCrLf, From e In namedElements
-                                                          Select $"{e.AccessModifier}{controlBackingFieldModifier} {e.ControlName} As {e.TypeName}")
+                                                          Select $"{e.AccessModifier}WithEvents {e.ControlName}WithEvents As {e.TypeName}")
+                Dim backingFieldsInitBlock = String.Join(vbCrLf, From e In namedElements
+                                                                 Select $"{e.ControlName} = Content.FindByName(Of {e.TypeName})(NameOf({e.ControlName}))")
                 Dim withEventsInitBlock = String.Join(vbCrLf, From e In namedElements
-                                                              Select $"{e.ControlName} = Content.FindByName(Of {e.TypeName})(NameOf({e.ControlName}))")
+                                                              Select $"{e.ControlName}WithEvents = {e.ControlName}")
                 curBuilder.AppendLine($"Partial Public Class {className}
     Inherits {baseClass}
+{backingFieldsBlock}
 {withEventsBlock}
     Sub New()
         InitializeComponent()
+        InitializeWithEvents()
         OnComponentInitialized()
+    End Sub
+
+    Private Sub InitializeWithEvents()
+{withEventsInitBlock}
     End Sub
 
     Partial Private Sub OnComponentInitialized()
@@ -154,7 +158,7 @@ End Class
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Xamarin.Forms.Build.Tasks.XamlG"", ""0.0.0.0"")>
     Private Sub InitializeComponent()
         Extensions.LoadFromXaml(Me, GetType({className}))
-{withEventsInitBlock}
+{backingFieldsInitBlock}
     End Sub
 End Class")
             End If
@@ -165,5 +169,4 @@ End Class")
         appXaml = appXamlBuilder.ToString
         pageXaml = pageXamlBuilder.ToString
     End Sub
-
 End Class

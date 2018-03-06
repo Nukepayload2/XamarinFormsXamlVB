@@ -6,7 +6,7 @@ Namespace Views
     Partial Public Class NewItemPage
         Public Property Item As Item
 
-        Private Async Sub Save_Clicked(sender As Object, e As EventArgs) Handles Save.Clicked
+        Private Async Sub Save_Clicked(sender As Object, e As EventArgs) Handles SaveWithEvents.Clicked
             MessagingCenter.Send(Me, "AddItem", Item)
             Await Navigation.PopModalAsync()
         End Sub

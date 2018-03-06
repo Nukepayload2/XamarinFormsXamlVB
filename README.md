@@ -28,8 +28,8 @@ That's why I'm working on a T4 template that generates those missing codes.
 - Windows 10 (>= 10.0.16299.0)
 
 ## Known Issues
-- Xaml pre-compile is not supported.
-- The Xamarin.Forms UI assembly can not be simplified (or linked).
+- Named controls' backing fields are renamed in order to workaround XamlC limitations. For example, "BtnOk" is renamed to "BtnOkWithEvents".
+- Custom xmlns with "http" uri is not supported. Use "using" or "clr-namespace" instead.
 
 ## Contribute
 - We need your help to improve English contents or fix bugs.
@@ -62,8 +62,8 @@ That's why I'm working on a T4 template that generates those missing codes.
 - Windows 10 (>= 10.0.16299.0)
 
 ## 已知问题
-- Xaml 预编译不受支持。
-- Xamarin.Forms UI 程序集不能简化或链接。
+- 已命名的控件经过重命名，以解决 XamlC 的限制。例如 "BtnOk" 重命名为 "BtnOkWithEvents"。
+- 自定义使用 http Uri 的 xmlns 不受支持。使用 using 或者 clr-namespace 代替。
 
 ## 贡献
 - 我们需要帮助来改进英文内容和修复 Bug。

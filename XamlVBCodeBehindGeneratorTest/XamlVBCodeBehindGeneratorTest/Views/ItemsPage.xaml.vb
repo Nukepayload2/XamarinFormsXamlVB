@@ -9,14 +9,14 @@ Namespace Views
 
         Private viewModel As New ItemsViewModel
 
-        Private Async Sub ItemsListView_ItemSelected(sender As Object, e As SelectedItemChangedEventArgs) Handles ItemsListView.ItemSelected
+        Private Async Sub ItemsListView_ItemSelected(sender As Object, e As SelectedItemChangedEventArgs) Handles ItemsListViewWithEvents.ItemSelected
             Dim item = TryCast(e.SelectedItem, Item)
             If item Is Nothing Then Return
             Await Navigation.PushAsync(New ItemDetailPage(New ItemDetailViewModel(item)))
             ItemsListView.SelectedItem = Nothing
         End Sub
 
-        Private Async Sub AddItem_Clicked(sender As Object, e As EventArgs) Handles AddItem.Clicked
+        Private Async Sub AddItem_Clicked(sender As Object, e As EventArgs) Handles AddItemWithEvents.Clicked
             Await Navigation.PushModalAsync(New NavigationPage(New NewItemPage()))
         End Sub
 
