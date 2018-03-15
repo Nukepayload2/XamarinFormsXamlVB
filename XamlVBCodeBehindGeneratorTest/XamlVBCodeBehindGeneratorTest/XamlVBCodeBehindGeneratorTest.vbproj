@@ -9,6 +9,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Xamarin.Forms.Core">
+      <HintPath>Xamarin.Forms.Core</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="GeneratedForXaml.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>GeneratedForXaml.vb</LastGenOutput>
@@ -25,6 +31,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>GeneratedForXaml.tt</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Themes\MyUserControlTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

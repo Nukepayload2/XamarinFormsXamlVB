@@ -90,8 +90,14 @@ End Class
                 ' WithEvents code generation.
                 Dim parsedXaml = XElement.Parse(xamlText)
                 Dim xmlXName As XName = XName.Get("Name", X2009Uri)
+                Dim xmlXKey As XName = XName.Get("Key", X2009Uri)
                 Dim xmlXFieldModifier As XName = XName.Get("FieldModifier", X2009Uri)
+                Dim baseClassNs = tryGetClrNamespace(parsedXaml.Name.Namespace.NamespaceName)
                 Dim baseClass = parsedXaml.Name.LocalName
+                If Not String.IsNullOrEmpty(baseClassNs) Then
+                    baseClass = "Global." + baseClassNs + "." + baseClass
+                End If
+                Dim isResourceDictionary = baseClass = "Global.Xamarin.Forms.ResourceDictionary"
                 Dim getNonTemplatedNodes As Func(Of XElement, IEnumerable(Of XElement)) =
                     Iterator Function(element)
                         Dim elementName As XName = element.Name
@@ -144,10 +150,30 @@ End Class
                                                                  Select $"{e.ControlName} = Content.FindByName(Of {e.TypeName})(NameOf({e.ControlName}))")
                 Dim withEventsInitBlock = String.Join(vbCrLf, From e In namedElements
                                                               Select $"{e.ControlName}WithEvents = {e.ControlName}")
+                Dim resourceDictionaryAccessProperties = String.Empty
+                If isResourceDictionary Then
+                    Dim keys = From node In parsedXaml.Elements
+                               Let keyAttr = node.Attribute(xmlXKey)
+                               Where keyAttr IsNot Nothing
+                               Let propName = keyAttr.Value
+                               Let ctlNamespace = tryGetClrNamespace(node.Name.Namespace.NamespaceName)
+                               Let typeName = "Global." + ctlNamespace + "." + node.Name.LocalName
+                               Select $"
+    Private _{propName} As {typeName}
+    Public ReadOnly Property {propName} As {typeName}
+        Get
+            If _{propName} Is Nothing Then
+                _{propName} = DirectCast(Me!{propName}, {typeName})
+            End If
+            Return _{propName}
+        End Get
+    End Property"
+                    resourceDictionaryAccessProperties = String.Join(vbCrLf, keys)
+                End If
                 curBuilder.AppendLine($"Partial Public Class {className}
     Inherits {baseClass}
 {backingFieldsBlock}
-{withEventsBlock}
+{withEventsBlock}{resourceDictionaryAccessProperties}
     Sub New()
         InitializeComponent()
         InitializeWithEvents()
