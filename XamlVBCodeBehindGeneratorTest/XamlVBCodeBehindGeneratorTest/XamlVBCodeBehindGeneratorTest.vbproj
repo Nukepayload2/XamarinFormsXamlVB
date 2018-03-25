@@ -50,10 +50,4 @@
     </Compile>
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Themes\MyUserControlTemplates.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-
 </Project>

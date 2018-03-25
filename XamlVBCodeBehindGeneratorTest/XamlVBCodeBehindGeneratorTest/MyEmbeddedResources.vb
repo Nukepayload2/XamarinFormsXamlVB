@@ -7,6 +7,11 @@ Namespace My
     ''' </summary>
     Public Class EmbeddedResources
         Private Shared s_currentAssembly As Assembly = Assembly.GetExecutingAssembly
+        Public Shared ReadOnly Property Assets(assetName As String) As UnmanagedMemoryStream
+            Get
+                Return s_currentAssembly.GetManifestResourceStream($"XamlVBCodeBehindGeneratorTest.{assetName}")
+            End Get
+        End Property
 
         ''' <summary>
         ''' 查找资源 Assets\生日蛋糕_22_omega.png

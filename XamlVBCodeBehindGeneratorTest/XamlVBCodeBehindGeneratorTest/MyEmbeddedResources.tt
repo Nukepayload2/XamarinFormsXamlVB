@@ -17,6 +17,15 @@
         Dim myResourcesBuilder As New StringBuilder
         Dim embeddedResourcesDirs = {"Assets"}
         Dim rootNamespace = projDir.Split({Path.DirectorySeparatorChar}, StringSplitOptions.RemoveEmptyEntries).Last
+        Dim vbproj = Directory.GetFiles(projDir, "*.vbproj").FirstOrDefault
+        If vbproj IsNot Nothing Then
+		    Dim vbprojDoc = XElement.Load(vbproj)
+            Dim rnOverride = Aggregate pg In vbprojDoc...<PropertyGroup> Let rn = pg.<RootNamespace> Where rn IsNot Nothing
+                          Select rn.Value Into FirstOrDefault
+            If rnOverride <> Nothing Then
+                rootNamespace = rnOverride
+            End If
+        End If
         Dim getFiles As Func(Of String, Integer, IEnumerable(Of String)) =
             Iterator Function(dir, iterCount)
                 Directory.SetCurrentDirectory(dir)
@@ -31,7 +40,7 @@
                     Next
                 Next
             End Function
-        myResourcesBuilder.Append("Imports System.IO
+        myResourcesBuilder.Append($"Imports System.IO
 Imports System.Reflection
 
 Namespace My
@@ -40,6 +49,11 @@ Namespace My
     ''' </summary>
     Public Class EmbeddedResources
         Private Shared s_currentAssembly As Assembly = Assembly.GetExecutingAssembly
+        Public Shared ReadOnly Property Assets(assetName As String) As UnmanagedMemoryStream
+            Get
+                Return s_currentAssembly.GetManifestResourceStream($""{rootNamespace}.{{assetName}}"")
+            End Get
+        End Property
 ")
         For Each resourceDir In embeddedResourcesDirs
             For Each fp In getFiles(Path.Combine(projDir, resourceDir), 0)
