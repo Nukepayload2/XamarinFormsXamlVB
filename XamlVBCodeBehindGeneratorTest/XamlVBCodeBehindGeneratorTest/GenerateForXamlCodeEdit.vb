@@ -8,6 +8,16 @@ Public Class GenerateForXamlCodeEdit
     Sub Run(projDir$)
         Const X2009Uri = "http://schemas.microsoft.com/winfx/2009/xaml",
               XFUri = "http://xamarin.com/schemas/2014/forms"
+        Dim rootNamespace = projDir.Split({Path.DirectorySeparatorChar}, StringSplitOptions.RemoveEmptyEntries).Last
+        Dim vbproj = Directory.GetFiles(projDir, "*.vbproj").FirstOrDefault
+        If vbproj IsNot Nothing Then
+            Dim vbprojDoc = XElement.Load(vbproj)
+            Dim rnOverride = Aggregate pg In vbprojDoc...<PropertyGroup> Let rn = pg.<RootNamespace> Where rn IsNot Nothing
+                          Select rn.Value Into FirstOrDefault
+            If rnOverride <> Nothing Then
+                rootNamespace = rnOverride
+            End If
+        End If
         Dim tryGetClrNamespace =
             Function(xmlns As String) As String
                 If xmlns.StartsWith("using") OrElse xmlns.StartsWith("clr-namespace") Then
@@ -35,6 +45,7 @@ Imports Xamarin.Forms.Xaml
         Dim getXamlXClass As New Regex("(?<=x:Class\="").+?(?="")")
         Dim pageXamlBuilder As New StringBuilder
         Dim appXamlBuilder As New StringBuilder
+        Dim commonBuilder As New StringBuilder(common)
         Dim getFiles As Func(Of String, Integer, IEnumerable(Of String)) =
             Iterator Function(dir, iterCount)
                 Directory.SetCurrentDirectory(dir)
@@ -52,28 +63,30 @@ Imports Xamarin.Forms.Xaml
         For Each fp In From f In getFiles(projDir, 0)
                        Where f.EndsWith(".xaml", StringComparison.OrdinalIgnoreCase)
             Dim fn = Path.GetFileName(fp)
+            Dim shortFp = fp.Substring(projDir.Length)
             Dim isAppXaml As Boolean = fn.Equals("App.xaml", StringComparison.OrdinalIgnoreCase)
             Dim curBuilder = If(isAppXaml, appXamlBuilder, pageXamlBuilder)
             Dim className = Path.GetFileNameWithoutExtension(fn)
             Dim xamlText As String = File.ReadAllText(fn)
             Dim definedXClass As Boolean = getXamlXClass.IsMatch(xamlText)
             If definedXClass Then
-                Dim matched = getXamlXClass.Match(xamlText).Value
-                Dim dotIndex = matched.LastIndexOf("."c)
-                className = matched.Substring(dotIndex + 1)
+                Dim fullName = getXamlXClass.Match(xamlText).Value
+                Dim dotIndex = fullName.LastIndexOf("."c)
+                className = fullName.Substring(dotIndex + 1)
                 If dotIndex > 0 Then
+                    commonBuilder.AppendLine($"<Assembly: Global.Xamarin.Forms.Xaml.XamlResourceId(""{rootNamespace}.{fn}"", ""{shortFp}"", GetType(Global.{fullName}))>")
                     curBuilder.
                         Append("Namespace Global.").
-                        Append(matched, 0, dotIndex).AppendLine()
+                        Append(fullName, 0, dotIndex).AppendLine()
                 Else
                     Throw New InvalidOperationException("Invalid x:Class value in App.xaml.")
                 End If
             End If
-            curBuilder.AppendLine($"<Global.Xamarin.Forms.Xaml.XamlFilePath(""{fp}"")>")
+            curBuilder.AppendLine($"<Global.Xamarin.Forms.Xaml.XamlFilePath(""{shortFp}"")>")
             If isAppXaml Then
                 curBuilder.AppendLine($"Partial Public Class {className}
     Inherits Application
-	<Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Xamarin.Forms.Build.Tasks.XamlG"", ""0.0.0.0"")>
+	<Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Xamarin.Forms.Build.Tasks.XamlG"", ""2.0.0.0"")>
     Private Sub InitializeComponent()
         Global.Xamarin.Forms.Xaml.Extensions.LoadFromXaml(Me, GetType({className}))
     End Sub
@@ -181,7 +194,7 @@ End Class
 
     End Sub
 
-    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Xamarin.Forms.Build.Tasks.XamlG"", ""0.0.0.0"")>
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Xamarin.Forms.Build.Tasks.XamlG"", ""2.0.0.0"")>
     Private Sub InitializeComponent()
         Extensions.LoadFromXaml(Me, GetType({className}))
 {backingFieldsInitBlock}
@@ -192,6 +205,7 @@ End Class")
                 curBuilder.AppendLine("End Namespace")
             End If
         Next
+        common = commonBuilder.ToString
         appXaml = appXamlBuilder.ToString
         pageXaml = pageXamlBuilder.ToString
     End Sub
