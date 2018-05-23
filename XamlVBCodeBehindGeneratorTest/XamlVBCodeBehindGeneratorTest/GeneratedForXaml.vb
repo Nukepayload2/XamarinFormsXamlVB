@@ -1,7 +1,4 @@
 ﻿Option Strict On
-Imports System.ComponentModel
-Imports Xamarin.Forms
-Imports Xamarin.Forms.Xaml
 <Assembly: Global.Xamarin.Forms.Xaml.XamlResourceId("XamlVBCodeBehindGeneratorTest.App.xaml", "App.xaml", GetType(Global.XamlVBCodeBehindGeneratorTest.App))>
 <Assembly: Global.Xamarin.Forms.Xaml.XamlResourceId("XamlVBCodeBehindGeneratorTest.MyUserControlTemplates.xaml", "Themes\MyUserControlTemplates.xaml", GetType(Global.XamlVBCodeBehindGeneratorTest.MyUserControlTemplates))>
 <Assembly: Global.Xamarin.Forms.Xaml.XamlResourceId("XamlVBCodeBehindGeneratorTest.AboutPage.xaml", "Views\AboutPage.xaml", GetType(Global.XamlVBCodeBehindGeneratorTest.Views.AboutPage))>
@@ -13,7 +10,7 @@ Imports Xamarin.Forms.Xaml
 Namespace Global.XamlVBCodeBehindGeneratorTest
 <Global.Xamarin.Forms.Xaml.XamlFilePath("App.xaml")>
 Partial Public Class App
-    Inherits Application
+    Inherits Global.Xamarin.Forms.Application
 	<Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Forms.Build.Tasks.XamlG", "2.0.0.0")>
     Private Sub InitializeComponent()
         Global.Xamarin.Forms.Xaml.Extensions.LoadFromXaml(Me, GetType(App))
@@ -25,9 +22,18 @@ End Namespace
 Namespace Global.XamlVBCodeBehindGeneratorTest
 <Global.Xamarin.Forms.Xaml.XamlFilePath("Themes\MyUserControlTemplates.xaml")>
 Partial Public Class MyUserControlTemplates
-    Inherits ResourceDictionary
+    Inherits Global.Xamarin.Forms.ResourceDictionary
 
 
+    Private _TestMyButtonTemplate As Global.Xamarin.Forms.DataTemplate
+    Public ReadOnly Property TestMyButtonTemplate As Global.Xamarin.Forms.DataTemplate
+        Get
+            If _TestMyButtonTemplate Is Nothing Then
+                _TestMyButtonTemplate = DirectCast(Me!TestMyButtonTemplate, Global.Xamarin.Forms.DataTemplate)
+            End If
+            Return _TestMyButtonTemplate
+        End Get
+    End Property
     Sub New()
         InitializeComponent()
         InitializeWithEvents()
@@ -44,7 +50,7 @@ Partial Public Class MyUserControlTemplates
 
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Forms.Build.Tasks.XamlG", "2.0.0.0")>
     Private Sub InitializeComponent()
-        Extensions.LoadFromXaml(Me, GetType(MyUserControlTemplates))
+        Global.Xamarin.Forms.Xaml.Extensions.LoadFromXaml(Me, GetType(MyUserControlTemplates))
 
     End Sub
 End Class
@@ -52,7 +58,7 @@ End Namespace
 Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 <Global.Xamarin.Forms.Xaml.XamlFilePath("Views\AboutPage.xaml")>
 Partial Public Class AboutPage
-    Inherits ContentPage
+    Inherits Global.Xamarin.Forms.ContentPage
 
 
     Sub New()
@@ -71,7 +77,7 @@ Partial Public Class AboutPage
 
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Forms.Build.Tasks.XamlG", "2.0.0.0")>
     Private Sub InitializeComponent()
-        Extensions.LoadFromXaml(Me, GetType(AboutPage))
+        Global.Xamarin.Forms.Xaml.Extensions.LoadFromXaml(Me, GetType(AboutPage))
 
     End Sub
 End Class
@@ -79,7 +85,7 @@ End Namespace
 Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 <Global.Xamarin.Forms.Xaml.XamlFilePath("Views\ItemDetailPage.xaml")>
 Partial Public Class ItemDetailPage
-    Inherits ContentPage
+    Inherits Global.Xamarin.Forms.ContentPage
 
 
     Sub New()
@@ -98,7 +104,7 @@ Partial Public Class ItemDetailPage
 
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Forms.Build.Tasks.XamlG", "2.0.0.0")>
     Private Sub InitializeComponent()
-        Extensions.LoadFromXaml(Me, GetType(ItemDetailPage))
+        Global.Xamarin.Forms.Xaml.Extensions.LoadFromXaml(Me, GetType(ItemDetailPage))
 
     End Sub
 End Class
@@ -106,7 +112,7 @@ End Namespace
 Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 <Global.Xamarin.Forms.Xaml.XamlFilePath("Views\ItemsPage.xaml")>
 Partial Public Class ItemsPage
-    Inherits ContentPage
+    Inherits Global.Xamarin.Forms.ContentPage
 Private  BrowseItemsPage As Global.Xamarin.Forms.ContentPage
 Private  AddItem As Global.Xamarin.Forms.ToolbarItem
 Private  ItemsListView As Global.Xamarin.Forms.ListView
@@ -131,17 +137,17 @@ ItemsListViewWithEvents = ItemsListView
 
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Forms.Build.Tasks.XamlG", "2.0.0.0")>
     Private Sub InitializeComponent()
-        Extensions.LoadFromXaml(Me, GetType(ItemsPage))
-BrowseItemsPage = Content.FindByName(Of Global.Xamarin.Forms.ContentPage)(NameOf(BrowseItemsPage))
-AddItem = Content.FindByName(Of Global.Xamarin.Forms.ToolbarItem)(NameOf(AddItem))
-ItemsListView = Content.FindByName(Of Global.Xamarin.Forms.ListView)(NameOf(ItemsListView))
+        Global.Xamarin.Forms.Xaml.Extensions.LoadFromXaml(Me, GetType(ItemsPage))
+BrowseItemsPage = Global.Xamarin.Forms.NameScopeExtensions.FindByName(Of Global.Xamarin.Forms.ContentPage)(Me, NameOf(BrowseItemsPage))
+AddItem = Global.Xamarin.Forms.NameScopeExtensions.FindByName(Of Global.Xamarin.Forms.ToolbarItem)(Me, NameOf(AddItem))
+ItemsListView = Global.Xamarin.Forms.NameScopeExtensions.FindByName(Of Global.Xamarin.Forms.ListView)(Me, NameOf(ItemsListView))
     End Sub
 End Class
 End Namespace
 Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 <Global.Xamarin.Forms.Xaml.XamlFilePath("Views\MainPage.xaml")>
 Partial Public Class MainPage
-    Inherits TabbedPage
+    Inherits Global.Xamarin.Forms.TabbedPage
 
 
     Sub New()
@@ -160,7 +166,7 @@ Partial Public Class MainPage
 
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Forms.Build.Tasks.XamlG", "2.0.0.0")>
     Private Sub InitializeComponent()
-        Extensions.LoadFromXaml(Me, GetType(MainPage))
+        Global.Xamarin.Forms.Xaml.Extensions.LoadFromXaml(Me, GetType(MainPage))
 
     End Sub
 End Class
@@ -168,7 +174,7 @@ End Namespace
 Namespace Global.XamlVBCodeBehindGeneratorTest.Views
 <Global.Xamarin.Forms.Xaml.XamlFilePath("Views\NewItemPage.xaml")>
 Partial Public Class NewItemPage
-    Inherits ContentPage
+    Inherits Global.Xamarin.Forms.ContentPage
 Private  Save As Global.Xamarin.Forms.ToolbarItem
 Private WithEvents SaveWithEvents As Global.Xamarin.Forms.ToolbarItem
     Sub New()
@@ -187,8 +193,8 @@ SaveWithEvents = Save
 
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Forms.Build.Tasks.XamlG", "2.0.0.0")>
     Private Sub InitializeComponent()
-        Extensions.LoadFromXaml(Me, GetType(NewItemPage))
-Save = Content.FindByName(Of Global.Xamarin.Forms.ToolbarItem)(NameOf(Save))
+        Global.Xamarin.Forms.Xaml.Extensions.LoadFromXaml(Me, GetType(NewItemPage))
+Save = Global.Xamarin.Forms.NameScopeExtensions.FindByName(Of Global.Xamarin.Forms.ToolbarItem)(Me, NameOf(Save))
     End Sub
 End Class
 End Namespace

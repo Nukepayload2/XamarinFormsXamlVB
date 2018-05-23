@@ -42,9 +42,6 @@
                 End If
             End Function
         Dim common = "Option Strict On
-Imports System.ComponentModel
-Imports Xamarin.Forms
-Imports Xamarin.Forms.Xaml
 "
         Dim appXaml = ""
         Dim pageXaml = ""
@@ -92,7 +89,7 @@ Imports Xamarin.Forms.Xaml
             curBuilder.AppendLine($"<Global.Xamarin.Forms.Xaml.XamlFilePath(""{shortFp}"")>")
             If isAppXaml Then
                 curBuilder.AppendLine($"Partial Public Class {className}
-    Inherits Application
+    Inherits Global.Xamarin.Forms.Application
 	<Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Xamarin.Forms.Build.Tasks.XamlG"", ""2.0.0.0"")>
     Private Sub InitializeComponent()
         Global.Xamarin.Forms.Xaml.Extensions.LoadFromXaml(Me, GetType({className}))
@@ -107,7 +104,7 @@ End Class
                 Dim xmlXFieldModifier As XName = XName.Get("FieldModifier", X2009Uri)
                 Dim baseClassNs = tryGetClrNamespace(parsedXaml.Name.Namespace.NamespaceName)
                 Dim baseClass = parsedXaml.Name.LocalName
-                If String.IsNullOrEmpty(baseClassNs) Then
+                If Not String.IsNullOrEmpty(baseClassNs) Then
                     baseClass = "Global." + baseClassNs + "." + baseClass
                 End If
                 Dim isResourceDictionary = baseClass = "Global.Xamarin.Forms.ResourceDictionary"
@@ -160,7 +157,7 @@ End Class
                 Dim withEventsBlock = String.Join(vbCrLf, From e In namedElements
                                                           Select $"{e.AccessModifier}WithEvents {e.ControlName}WithEvents As {e.TypeName}")
                 Dim backingFieldsInitBlock = String.Join(vbCrLf, From e In namedElements
-                                                                 Select $"{e.ControlName} = Content.FindByName(Of {e.TypeName})(NameOf({e.ControlName}))")
+                                                                 Select $"{e.ControlName} = Global.Xamarin.Forms.NameScopeExtensions.FindByName(Of {e.TypeName})(Me, NameOf({e.ControlName}))")
                 Dim withEventsInitBlock = String.Join(vbCrLf, From e In namedElements
                                                               Select $"{e.ControlName}WithEvents = {e.ControlName}")
                 Dim resourceDictionaryAccessProperties = String.Empty
@@ -203,7 +200,7 @@ End Class
 
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Xamarin.Forms.Build.Tasks.XamlG"", ""2.0.0.0"")>
     Private Sub InitializeComponent()
-        Extensions.LoadFromXaml(Me, GetType({className}))
+        Global.Xamarin.Forms.Xaml.Extensions.LoadFromXaml(Me, GetType({className}))
 {backingFieldsInitBlock}
     End Sub
 End Class")
